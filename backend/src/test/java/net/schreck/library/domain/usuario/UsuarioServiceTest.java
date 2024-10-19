@@ -96,9 +96,7 @@ class UsuarioServiceTest {
         AlterarUsuarioRequest request = new AlterarUsuarioRequest(2L, "Novo Usuario", "novoemail@example.com", "987654321");
         when(repository.findById(2L)).thenReturn(Optional.empty());
 
-        var exception = assertThrows(ResponseStatusException.class, () -> {
-            service.alterar(request);
-        });
+        var exception = assertThrows(ResponseStatusException.class, () -> service.alterar(request));
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         assertEquals(USUARIO_NAO_ENCONTRADO, exception.getReason());
@@ -127,9 +125,7 @@ class UsuarioServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> {
-            service.excluir(id);
-        });
+        assertThrows(ResponseStatusException.class, () -> service.excluir(id));
 
         verify(repository, never()).delete(any(Usuario.class));
     }

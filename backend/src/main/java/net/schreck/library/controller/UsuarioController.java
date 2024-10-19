@@ -1,6 +1,5 @@
 package net.schreck.library.controller;
 
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.schreck.library.domain.usuario.Usuario;
@@ -11,10 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/api/v1/usuario")
-@Tag(name = "Usuario API", description = "CRUD Usuario")
+@Tag(name = "Usuario")
 @RequiredArgsConstructor
 public class UsuarioController {
 
@@ -28,7 +26,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    @GetMapping("/id/{clienteId}")
+    @GetMapping("/{clienteId}")
     ResponseEntity<Usuario> obter(@PathVariable("clienteId") Long clienteId) {
 
         var usuario = service.consultar(clienteId);
@@ -51,6 +49,4 @@ public class UsuarioController {
 
         return ResponseEntity.noContent().build();
     }
-
-
 }

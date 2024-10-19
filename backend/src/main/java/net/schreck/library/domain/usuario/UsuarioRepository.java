@@ -1,5 +1,7 @@
 package net.schreck.library.domain.usuario;
 
+import jakarta.validation.constraints.NotNull;
+import lombok.NonNull;
 import net.schreck.library.dto.usuario.UsuarioResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<UsuarioResponse> findByEmail(String email);
 
     @Transactional(readOnly = true)
-    Optional<Usuario> findById(Long id);
+    Optional<Usuario> findById(@NonNull Long id);
 
 }

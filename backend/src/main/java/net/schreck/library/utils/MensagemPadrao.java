@@ -6,4 +6,6 @@ public class MensagemPadrao {
 
     public static final String USUARIO_DUPLICADO = "Email ja cadastrado!";
     public static final String USUARIO_NAO_ENCONTRADO = "Usuario não encontrado!";
+
+    public static final String LIVRO_NAO_ENCONTRADO = "Livro não encontrado!";
 }
