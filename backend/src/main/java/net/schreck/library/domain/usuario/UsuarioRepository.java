@@ -9,9 +9,6 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    @Transactional
-    Optional<UsuarioResponse> save(CadastroUsuarioRequest usuario);
-
     @Transactional(readOnly = true)
     Optional<UsuarioResponse> findByEmail(String email);
 

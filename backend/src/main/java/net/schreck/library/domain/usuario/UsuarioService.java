@@ -35,7 +35,6 @@ public class UsuarioService {
 
     public Usuario consultar(CadastroUsuarioRequest request){
 
-
         UsuarioResponse usuario = repository.findByEmail(request.email())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, CLIENTE_DUPLICADO));
 
