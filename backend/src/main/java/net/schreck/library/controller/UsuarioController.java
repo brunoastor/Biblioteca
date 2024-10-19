@@ -5,13 +5,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.schreck.library.domain.usuario.Usuario;
 import net.schreck.library.domain.usuario.UsuarioService;
+import net.schreck.library.dto.usuario.AlterarUsuarioRequest;
 import net.schreck.library.dto.usuario.CadastroUsuarioRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -25,9 +23,34 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Usuario> cadastro(@RequestBody @Validated CadastroUsuarioRequest request){
 
-        var usuario = service.cadastro(request);
+        var usuario = service.cadastrar(request);
 
         return ResponseEntity.ok(usuario);
     }
+
+    @GetMapping("/id/{clienteId}")
+    ResponseEntity<Usuario> obter(@PathVariable("clienteId") Long clienteId) {
+
+        var usuario = service.consultar(clienteId);
+
+        return ResponseEntity.ok(usuario);
+    }
+
+    @PutMapping("/atualizar")
+    ResponseEntity<Usuario> atualizar(@RequestBody @Validated AlterarUsuarioRequest request){
+
+        var usuario = service.alterar(request);
+
+        return ResponseEntity.ok(usuario);
+    }
+
+    @DeleteMapping("/excluir/{clienteId}")
+    ResponseEntity<Void> excluir(@PathVariable("clienteId") Long clienteId){
+
+        service.excluir(clienteId);
+
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
