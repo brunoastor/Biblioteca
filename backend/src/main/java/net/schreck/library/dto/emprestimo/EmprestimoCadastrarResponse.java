@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Builder
-public record EmprestimoResponse(
+public record EmprestimoCadastrarResponse(
         Long id,
         String nomeUsuario,
         List<EmprestimoLivrosResponse> livros,

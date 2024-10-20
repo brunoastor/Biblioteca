@@ -34,5 +34,6 @@ public class Livro {
     private String categoria;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private StatusLivro status;
 }

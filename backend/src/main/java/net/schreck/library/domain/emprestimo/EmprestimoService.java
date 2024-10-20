@@ -7,9 +7,11 @@ import net.schreck.library.domain.livro.LivroService;
 import net.schreck.library.domain.usuario.Usuario;
 import net.schreck.library.domain.usuario.UsuarioService;
 import net.schreck.library.dto.emprestimo.CadastrarEmprestimoRequest;
+import net.schreck.library.dto.emprestimo.EmprestimoConsultarResponse;
 import net.schreck.library.dto.emprestimo.EmprestimoLivrosResponse;
-import net.schreck.library.dto.emprestimo.EmprestimoResponse;
+import net.schreck.library.dto.emprestimo.EmprestimoCadastrarResponse;
 import net.schreck.library.enums.StatusEmprestimo;
+import net.schreck.library.enums.StatusLivro;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,7 +31,7 @@ public class EmprestimoService {
 
     private final EmprestimoRepository repository;
 
-    public EmprestimoResponse emprestar(CadastrarEmprestimoRequest request){
+    public EmprestimoCadastrarResponse emprestar(CadastrarEmprestimoRequest request){
 
         var usuario = usuarioService.consultar(request.idCliente());
         List<Livro> livros = livroService.consultarTodos(request.idLivros());
@@ -37,19 +39,46 @@ public class EmprestimoService {
         var emprestimo = repository.save(criarEmprestimo(usuario, livros));
         livroService.setEmprestados(livros);
 
-        return emprestarToResponse(emprestimo);
+        return emprestarResponse(emprestimo);
     }
 
-    public EmprestimoResponse consultar(Long usuarioId){
+    public EmprestimoConsultarResponse consultarPorUsuario(Long usuarioId){
         var usuario = usuarioService.consultar(usuarioId);
 
-        var emprestimo = repository.findByUsuario(usuario)
+        var emprestimos = repository.findByUsuario(usuario)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMPRESTIMO_NAO_ENCONTRADO));
 
-        return emprestarToResponse(emprestimo);
+        return consultarResponse(usuario, emprestimos);
     }
 
-    private EmprestimoResponse emprestarToResponse(Emprestimo emprestimo) {
+    public void devolver(Long emprestimoId) {
+        var emprestimo = consultarPorEmprestimo(emprestimoId);
+
+        if(emprestimo.getLivros().isEmpty()){
+            throw  new ResponseStatusException(HttpStatus.NOT_FOUND, LIVROS_NAO_ENCONTRADOS);
+        }
+
+        List<Livro> livros = emprestimo.getLivros().stream()
+                .map(EmprestimoLivro::getLivro)
+                .peek(livro -> livro.setStatus(StatusLivro.DISPONIVEL))
+                .collect(Collectors.toList());
+
+        livroService.atualizarStatus(livros);
+        atualizarStatus(emprestimo);
+    }
+
+    private void atualizarStatus(Emprestimo emprestimo){
+        emprestimo.setStatus(StatusEmprestimo.DEVOLVIDO);
+        repository.save(emprestimo);
+    }
+
+    private Emprestimo consultarPorEmprestimo(Long emprestimoId){
+
+        return repository.findById(emprestimoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMPRESTIMO_NAO_ENCONTRADO));
+    }
+
+    private EmprestimoCadastrarResponse emprestarResponse(Emprestimo emprestimo) {
         List<EmprestimoLivrosResponse> livrosResponse = emprestimo.getLivros().stream()
                 .map(livro ->
                         EmprestimoLivrosResponse.builder()
@@ -58,12 +87,21 @@ public class EmprestimoService {
                         .build())
                 .collect(Collectors.toList());
 
-        return EmprestimoResponse.builder()
+        return EmprestimoCadastrarResponse.builder()
                 .id(emprestimo.getId())
                 .nomeUsuario(emprestimo.getUsuario().getNome())
                 .livros(livrosResponse)
                 .dataEmprestimo(emprestimo.getDataEmprestimo())
                 .dataDevolucao(emprestimo.getDataDevolucao())
+                .build();
+    }
+
+    private EmprestimoConsultarResponse consultarResponse(Usuario usuario, List<Emprestimo> emprestimos){
+
+        return EmprestimoConsultarResponse.builder()
+                .nome(usuario.getNome())
+                .email(usuario.getEmail())
+                .emprestimos(emprestimos)
                 .build();
     }
 

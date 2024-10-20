@@ -98,4 +98,8 @@ public class LivroService {
         livros.forEach(livro -> livro.setStatus(StatusLivro.INDISPONIVEL));
         repository.saveAll(livros);
     }
+
+    public void atualizarStatus(List<Livro> livro){
+        repository.saveAll(livro);
+    }
 }

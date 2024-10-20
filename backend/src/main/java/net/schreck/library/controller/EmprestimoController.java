@@ -4,7 +4,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.schreck.library.domain.emprestimo.EmprestimoService;
 import net.schreck.library.dto.emprestimo.CadastrarEmprestimoRequest;
-import net.schreck.library.dto.emprestimo.EmprestimoResponse;
+import net.schreck.library.dto.emprestimo.EmprestimoCadastrarResponse;
+import net.schreck.library.dto.emprestimo.EmprestimoConsultarResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class EmprestimoController {
     private final EmprestimoService service;
 
     @PostMapping
-    public ResponseEntity<EmprestimoResponse> cadastrar(@RequestBody @Validated CadastrarEmprestimoRequest request){
+    public ResponseEntity<EmprestimoCadastrarResponse> cadastrar(@RequestBody @Validated CadastrarEmprestimoRequest request){
 
         var emprestimo = service.emprestar(request);
 
@@ -27,14 +28,29 @@ public class EmprestimoController {
     }
 
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<EmprestimoResponse> consultarPorCliente(@PathVariable("id") Long id){
+    public ResponseEntity<EmprestimoConsultarResponse> consultar(@PathVariable("id") Long id){
 
-        var emprestimo = service.consultar(id);
+        var emprestimo = service.consultarPorUsuario(id);
 
         return ResponseEntity.ok(emprestimo);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> devolver(@PathVariable("id") Long id){
 
+        service.devolver(id);
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public void alterar(){
+        //TODO
+    }
+
+    @DeleteMapping
+    public void excluir(){
+        //TODO
+    }
 
 }
