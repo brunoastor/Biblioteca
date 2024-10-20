@@ -1,11 +1,14 @@
 package net.schreck.library.domain.usuario;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import net.schreck.library.domain.emprestimo.Emprestimo;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor

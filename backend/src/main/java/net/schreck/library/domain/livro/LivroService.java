@@ -3,9 +3,12 @@ package net.schreck.library.domain.livro;
 import lombok.RequiredArgsConstructor;
 import net.schreck.library.dto.livro.AlterarLivroRequest;
 import net.schreck.library.dto.livro.CadastroLivroRequest;
+import net.schreck.library.enums.StatusLivro;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 import static net.schreck.library.utils.MensagemPadrao.*;
 
@@ -25,12 +28,34 @@ public class LivroService {
                         .isbn(request.isbn())
                         .dataPublicacao(String.valueOf(request.dataPublicacao()))
                         .categoria(request.categoria())
+                        .status(StatusLivro.DISPONIVEL)
                         .build());
     }
 
     public Livro consultar(Long id){
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, LIVRO_NAO_ENCONTRADO));
+    }
+
+    public List<Livro> consultarTodos(List<Long> ids){
+
+        List<Livro> livros = repository.findAllById(ids);
+
+        if (livros.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, LIVRO_NAO_ENCONTRADO);
+        }
+        if (livros.size() != ids.size()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, LIVROS_NAO_ENCONTRADOS);
+        }
+
+        livros.stream()
+                .filter(livro -> livro.getStatus().equals(StatusLivro.INDISPONIVEL))
+                .findAny()
+                .ifPresent(livro -> {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "O livro '" + livro.getTitulo() + "' não está disponível!");
+                });
+
+        return livros;
     }
 
     public Livro alterar(AlterarLivroRequest request){
@@ -62,6 +87,15 @@ public class LivroService {
         var livro = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, LIVRO_NAO_ENCONTRADO));
 
+        if(livro.getStatus().equals(StatusLivro.INDISPONIVEL)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, LIVRO_NAO_DISPONIVEL);
+        }
+
         repository.delete(livro);
+    }
+
+    public void setEmprestados(List<Livro> livros){
+        livros.forEach(livro -> livro.setStatus(StatusLivro.INDISPONIVEL));
+        repository.saveAll(livros);
     }
 }

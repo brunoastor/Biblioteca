@@ -21,7 +21,7 @@ public class UsuarioService {
 
     public Usuario cadastrar(CadastroUsuarioRequest request){
 
-        Optional<UsuarioResponse> usuario = repository.findByEmail(request.email());
+        var usuario = repository.findByEmail(request.email());
 
         if(usuario.isPresent()) throw new ResponseStatusException(HttpStatus.CONFLICT, USUARIO_DUPLICADO);
 

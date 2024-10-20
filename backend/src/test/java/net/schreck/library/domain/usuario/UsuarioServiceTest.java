@@ -106,7 +106,7 @@ class UsuarioServiceTest {
     public void excluirUsuario() {
         Long id = 1L;
 
-        Usuario usuarioExistente = new Usuario();
+        Usuario usuarioExistente = new Usuario(1L, "Nome Antigo", "email@example.com", LocalDate.now(), "999999999");
         usuarioExistente.setId(id);
         usuarioExistente.setNome("Usuario");
         usuarioExistente.setEmail("usuario@email.com");

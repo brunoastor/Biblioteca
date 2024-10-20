@@ -5,9 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum Status {
-
+public enum StatusLivro {
     DISPONIVEL,
-    EMPRESTADO
-
+    INDISPONIVEL
 }

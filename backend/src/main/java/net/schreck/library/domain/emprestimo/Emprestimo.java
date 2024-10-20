@@ -1,14 +1,14 @@
 package net.schreck.library.domain.emprestimo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import net.schreck.library.enums.Status;
+import net.schreck.library.domain.livro.Livro;
+import net.schreck.library.domain.usuario.Usuario;
+import net.schreck.library.enums.StatusEmprestimo;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor @NoArgsConstructor
@@ -21,17 +21,22 @@ public class Emprestimo {
     private Long id;
 
     @NotNull
-    private String usuarioId;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     @NotNull
-    private String livroId;
+    @OneToMany
+    @JoinColumn(name = "emprestimo_id")
+    private List<Livro> livros;
 
     @NotNull
-    private String dataEmprestimo;
+    private LocalDate dataEmprestimo;
 
     @NotNull
     private LocalDate dataDevolucao;
 
     @NotNull
-    private Status status;
+    @Enumerated(EnumType.STRING)
+    private StatusEmprestimo status;
 }

@@ -1,7 +1,6 @@
 package net.schreck.library.dto.livro;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 
 import java.time.LocalDate;
 
