@@ -1,6 +1,7 @@
 package net.schreck.library.domain.emprestimo;
 
 import lombok.RequiredArgsConstructor;
+import net.schreck.library.domain.emprestimo_livro.EmprestimoLivro;
 import net.schreck.library.domain.livro.Livro;
 import net.schreck.library.domain.livro.LivroService;
 import net.schreck.library.domain.usuario.Usuario;
@@ -31,7 +32,7 @@ public class EmprestimoService {
     public EmprestimoResponse emprestar(CadastrarEmprestimoRequest request){
 
         var usuario = usuarioService.consultar(request.idCliente());
-        var livros = livroService.consultarTodos(request.idLivros());
+        List<Livro> livros = livroService.consultarTodos(request.idLivros());
 
         var emprestimo = repository.save(criarEmprestimo(usuario, livros));
         livroService.setEmprestados(livros);
@@ -39,15 +40,23 @@ public class EmprestimoService {
         return emprestarToResponse(emprestimo);
     }
 
-    private EmprestimoResponse emprestarToResponse(Emprestimo emprestimo){
+    public EmprestimoResponse consultar(Long usuarioId){
+        var usuario = usuarioService.consultar(usuarioId);
 
+        var emprestimo = repository.findByUsuario(usuario)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMPRESTIMO_NAO_ENCONTRADO));
+
+        return emprestarToResponse(emprestimo);
+    }
+
+    private EmprestimoResponse emprestarToResponse(Emprestimo emprestimo) {
         List<EmprestimoLivrosResponse> livrosResponse = emprestimo.getLivros().stream()
-                .map(livro -> EmprestimoLivrosResponse.builder()
-                        .id(livro.getId())
-                        .nome(livro.getTitulo())
+                .map(livro ->
+                        EmprestimoLivrosResponse.builder()
+                        .id(livro.getLivro().getId())
+                        .nome(livro.getLivro().getTitulo())
                         .build())
                 .collect(Collectors.toList());
-
 
         return EmprestimoResponse.builder()
                 .id(emprestimo.getId())
@@ -58,22 +67,29 @@ public class EmprestimoService {
                 .build();
     }
 
-    private Emprestimo criarEmprestimo(Usuario usuario, List<Livro> livros){
-        return Emprestimo.builder()
+    private EmprestimoLivro criarEmprestimoLivro(Livro livro, Emprestimo emprestimo) {
+        return EmprestimoLivro.builder()
+                .livro(livro)
+                .emprestimo(emprestimo)
+                .build();
+    }
+
+    private Emprestimo criarEmprestimo(Usuario usuario, List<Livro> livros) {
+        Emprestimo emprestimo = Emprestimo.builder()
                 .usuario(usuario)
-                .livros(livros)
                 .dataEmprestimo(LocalDate.now())
                 .dataDevolucao(LocalDate.now().plusDays(7))
                 .status(StatusEmprestimo.EMPRESTADO)
                 .build();
+
+        List<EmprestimoLivro> emprestimoLivros = livros.stream()
+                .map(livro -> criarEmprestimoLivro(livro, emprestimo))
+                .collect(Collectors.toList());
+
+        emprestimo.setLivros(emprestimoLivros);
+
+        return emprestimo;
     }
 
-    public EmprestimoResponse consultarPorUsuario(Long id){
-        var usuario = usuarioService.consultar(id);
 
-        var emprestimo = repository.findByUsuario(usuario)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMPRESTIMO_NAO_ENCONTRADO));
-
-        return emprestarToResponse(emprestimo);
-    }
 }

@@ -26,10 +26,10 @@ public class EmprestimoController {
         return ResponseEntity.ok(emprestimo);
     }
 
-    @GetMapping("/cliente/{id}")
+    @GetMapping("/usuario/{id}")
     public ResponseEntity<EmprestimoResponse> consultarPorCliente(@PathVariable("id") Long id){
 
-        var emprestimo = service.consultarPorUsuario(id);
+        var emprestimo = service.consultar(id);
 
         return ResponseEntity.ok(emprestimo);
     }

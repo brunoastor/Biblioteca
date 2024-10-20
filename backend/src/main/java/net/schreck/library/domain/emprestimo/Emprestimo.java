@@ -3,11 +3,13 @@ package net.schreck.library.domain.emprestimo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import net.schreck.library.domain.emprestimo_livro.EmprestimoLivro;
 import net.schreck.library.domain.livro.Livro;
 import net.schreck.library.domain.usuario.Usuario;
 import net.schreck.library.enums.StatusEmprestimo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -25,15 +27,15 @@ public class Emprestimo {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @NotNull
-    @OneToMany
-    @JoinColumn(name = "emprestimo_id")
-    private List<Livro> livros;
+    @OneToMany(mappedBy = "emprestimo", cascade = CascadeType.ALL)
+    private List<EmprestimoLivro> livros = new ArrayList<>();
 
     @NotNull
+    @JoinColumn(name = "data_emprestimo")
     private LocalDate dataEmprestimo;
 
     @NotNull
+    @JoinColumn(name = "data_devolucao")
     private LocalDate dataDevolucao;
 
     @NotNull
