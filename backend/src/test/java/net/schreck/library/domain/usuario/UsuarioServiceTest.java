@@ -1,9 +1,8 @@
 package net.schreck.library.domain.usuario;
 
-import static net.schreck.library.utils.MensagemPadrao.USUARIO_NAO_ENCONTRADO;
+import static net.schreck.library.utils.MensagemPadrao.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static net.schreck.library.utils.MensagemPadrao.USUARIO_DUPLICADO;
 
 import net.schreck.library.dto.usuario.AlterarUsuarioRequest;
 import net.schreck.library.dto.usuario.CadastroUsuarioRequest;

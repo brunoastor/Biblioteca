@@ -1,10 +1,8 @@
 package net.schreck.library.domain.livro;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import net.schreck.library.domain.emprestimo.Emprestimo;
 import net.schreck.library.enums.StatusLivro;
 
 @Builder

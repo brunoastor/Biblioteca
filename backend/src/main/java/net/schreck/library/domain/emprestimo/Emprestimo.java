@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import net.schreck.library.domain.emprestimo_livro.EmprestimoLivro;
-import net.schreck.library.domain.livro.Livro;
 import net.schreck.library.domain.usuario.Usuario;
 import net.schreck.library.enums.StatusEmprestimo;
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/google")
-@Tag(name = "Emprestimo")
+@Tag(name = "Google Books API")
 @RequiredArgsConstructor
 public class GoogleController {
 

@@ -3,13 +3,11 @@ package net.schreck.library.domain.usuario;
 import lombok.RequiredArgsConstructor;
 import net.schreck.library.dto.usuario.AlterarUsuarioRequest;
 import net.schreck.library.dto.usuario.CadastroUsuarioRequest;
-import net.schreck.library.dto.usuario.UsuarioResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static net.schreck.library.utils.MensagemPadrao.*;
 
