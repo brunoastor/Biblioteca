@@ -6,7 +6,7 @@ Alem de serviço de recomendação e integração com a API Google Books
 
 ## 🚀 Começando
 
-__git clone https://github.com/brunoastor/MUDAR__
+__git clone https://github.com/brunoastor/Biblioteca.git__
 
 ### 📋 Pré-requisitos
 
