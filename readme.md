@@ -48,7 +48,7 @@ http://localhost:8088/swagger-ui/index.html#
 ```
 
 ## 🛠️ Construído com
-* [Java](https://www.oracle.com/br/java/technologies/downloads/#java21) - SDK 21
+* [Java](https://www.oracle.com/br/java/technologies/downloads/#java21) - JDK 21
 * [Spring Boot 3](https://spring.io/) - Framework
 * [Maven](https://maven.apache.org/) - Dependências
 * [Swagger](https://swagger.io/) - Documentação Endpoints
