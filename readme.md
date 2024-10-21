@@ -1,4 +1,4 @@
-# Livraria API
+# Biblioteca API
 
 Aplicação para cadastro de usuarios, livros e controle de empréstimos para uma biblioteca.
 
